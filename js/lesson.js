@@ -64,6 +64,99 @@ hideTabContent()
 showTabContent(0);
 autoTabSwitcher();
 
+// CONVERTER
 
+const som = document.querySelector('#som')
+const usd = document.querySelector('#usd')
+const eur = document.querySelector('#eur')
+const cny = document.querySelector('#cny')
+const jpy = document.querySelector('#jpy')
+const czk = document.querySelector('#czk')
+// console.log(som);
 
+// som.addEventListener('input', (event) => {
+//     console.log(event.target.value);
+// })
 
+// som.addEventListener('input', () => {
+//     const request = new XMLHttpRequest()
+//     request.open("GET", "../data/converter.json")
+//     request.setRequestHeader("Content-type", "application/json")
+//     request.send()
+
+//     request.addEventListener('load', () => {
+//         const response = JSON.parse(request.response)
+//         usd.value = (som.value / response.usd).toFixed(2)
+//     })
+// })
+// usd.addEventListener('input', () => {
+//     const request = new XMLHttpRequest()
+//     request.open("GET", "../data/converter.json")
+//     request.setRequestHeader("Content-type", "application/json")
+//     request.send()
+
+//     request.addEventListener('load', () => {
+//         const response = JSON.parse(request.response)
+//         som.value = (usd.value * response.usd).toFixed(2)
+//     })
+// })
+
+const converter = (element, target1, target2, target3, target4, target5, currency) => {
+    element.oninput = () => {
+        const request = new XMLHttpRequest()
+        request.open("GET", "../data/converter.json")
+        request.setRequestHeader("Content-type", "application/json")
+        request.send()
+
+        request.onload = () => {
+            const response = JSON.parse(request.response)
+            if (currency === 'som') {
+                target1.value = (element.value / response.usd).toFixed(2)
+                target2.value = (element.value / response.eur).toFixed(2)
+                target3.value = (element.value / response.cny).toFixed(2)
+                target4.value = (element.value * response.jpy).toFixed(2)
+                target5.value = (element.value / response.czk).toFixed(2)
+            }else if(currency === 'usd'){
+                target1.value = (element.value * response.usd).toFixed(2)
+                target2.value = (element.value * (response.usd / response.eur)).toFixed(2)
+                target3.value = (element.value * (response.usd / response.cny)).toFixed(2)
+                target4.value = (element.value / response.usd * response.jpy).toFixed(3)
+                target5.value = (element.value *(response.usd / response.czk)).toFixed(2)
+            }else if(currency === 'eur'){
+                target1.value = (element.value * (response.eur / response.usd)).toFixed(2)
+                target2.value = (element.value * response.eur).toFixed(2)
+                target3.value = (element.value * (response.eur / response.cny)).toFixed(2)
+                target4.value = (element.value / response.eur * response.jpy).toFixed(3)
+                target5.value = (element.value * (response.eur / response.czk)).toFixed(2)
+            }else if(currency === 'cny'){
+                target1.value = (element.value * (response.cny / response.usd)).toFixed(2)
+                target2.value = (element.value * response.cny).toFixed(2)
+                target3.value = (element.value * (response.cny / response.eur)).toFixed(2)
+                target4.value = (element.value * (response.cny / response.jpy)).toFixed(2)
+                target5.value = (element.value * (response.cny / response.czk)).toFixed(2)
+            }else if (currency === 'jpy'){
+                target1.value = (element.value / response.usd * response.jpy).toFixed(3)
+                target2.value = (element.value * response.jpy).toFixed(2)
+                target3.value = (element.value / response.eur * response.jpy).toFixed(3)
+                target4.value = (element.value * (response.jpy / response.cny)).toFixed(2)
+                target5.value = (element.value * (response.jpy / response.czk)).toFixed(2)
+            }else if(currency === 'czk'){
+                target1.value = (element.value / response.usd * response.czk).toFixed(3)
+                target2.value = (element.value * response.czk).toFixed(2)
+                target3.value = (element.value / response.eur * response.czk).toFixed(3)
+                target4.value = (element.value / response.cny * response.czk).toFixed(2)
+                target5.value = (element.value * (response.czk / response.jpy)).toFixed(2)
+
+            }
+            // element.value === '' ? target.value = '' : false 
+            element.value === '' && (target1.value = target2.value = target3.value = target4.value = target5.value = '')
+        }
+    }
+}
+
+converter(som, usd, eur, cny, jpy, czk, 'som')
+converter(usd, som, eur, cny, jpy, czk, 'usd')
+converter(eur, usd, som, cny, jpy, czk, 'eur')
+converter(cny, usd, som, eur, jpy, czk, 'cny')
+converter(jpy, usd, som, eur, cny, czk, 'jpy')
+converter(czk, usd, som, eur, cny, jpy, 'czk')
