@@ -160,3 +160,46 @@ converter(eur, usd, som, cny, jpy, czk, 'eur')
 converter(cny, usd, som, eur, jpy, czk, 'cny')
 converter(jpy, usd, som, eur, cny, czk, 'jpy')
 converter(czk, usd, som, eur, cny, jpy, 'czk')
+
+
+// CARD SWITCHER
+
+const card = document.querySelector('.card')
+const btnNext = document.querySelector('#btn-next')
+const btnPrev = document.querySelector('#btn-prev')
+let count = 0
+const cardsAmount = 200
+
+const fetchAndSwitchCards = () => {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${count}`)
+        .then(response => response.json())
+        .then(data => {
+            card.innerHTML = `
+            <p>${data.title}</p>
+            <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
+            <span>${data.id}</span>
+            `
+        })
+}
+
+btnNext.onclick = () => {
+    count++
+    if (count > cardsAmount) {
+        count = 1
+    }
+    fetchAndSwitchCards()
+}
+btnPrev.onclick = () => {
+    count--
+    if (count < 1) {
+        count = cardsAmount
+    }
+    fetchAndSwitchCards()
+}
+
+// FETCH REQUEST
+fetch(`https://jsonplaceholder.typicode.com/posts`)
+    .then(response => response.json())
+    .then((data) => {
+        console.log(data);
+    })
