@@ -167,7 +167,7 @@ converter(czk, usd, som, eur, cny, jpy, 'czk')
 const card = document.querySelector('.card')
 const btnNext = document.querySelector('#btn-next')
 const btnPrev = document.querySelector('#btn-prev')
-let count = 0
+let count = 1
 const cardsAmount = 200
 
 const fetchAndSwitchCards = () => {
@@ -181,6 +181,8 @@ const fetchAndSwitchCards = () => {
             `
         })
 }
+
+fetchAndSwitchCards()
 
 btnNext.onclick = () => {
     count++
