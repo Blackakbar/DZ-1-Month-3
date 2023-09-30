@@ -170,17 +170,20 @@ const btnPrev = document.querySelector('#btn-prev')
 let count = 1
 const cardsAmount = 200
 
-const fetchAndSwitchCards = () => {
-    fetch(`https://jsonplaceholder.typicode.com/todos/${count}`)
-        .then(response => response.json())
-        .then(data => {
-            card.innerHTML = `
+const fetchAndSwitchCards = async () => {
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${count}`)
+        const data = await response.json()
+        card.innerHTML = `
             <p>${data.title}</p>
             <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
             <span>${data.id}</span>
-            `
-        })
+        `  
+    } catch (error) {
+        console.log(error, 'ERROR!');
+    }
 }
+
 
 fetchAndSwitchCards()
 
@@ -200,8 +203,31 @@ btnPrev.onclick = () => {
 }
 
 // FETCH REQUEST
-fetch(`https://jsonplaceholder.typicode.com/posts`)
-    .then(response => response.json())
-    .then((data) => {
-        console.log(data);
-    })
+// fetch(`https://jsonplaceholder.typicode.com/posts`)
+//     .then(response => response.json())
+//     .then((data) => {
+//         console.log(data);
+//     })
+
+// WEATHER
+const cityName = document.querySelector(".cityName")
+const city = document.querySelector('.city')
+const temp = document.querySelector('.temp')
+
+// API
+
+const DEFAULT_API = 'http://api.openweathermap.org/data/2.5/weather'
+const API_KEY = 'e417df62e04d3b1b111abeab19cea714'
+
+// optional chaining - ?.
+
+cityName.oninput = async (event) => {
+    try {
+        const response = await fetch(`${DEFAULT_API}?q=${event.target.value}&appid=${API_KEY}`)
+        const data = await response.json()
+        city.innerHTML = data?.name || 'Город не найден...'
+        temp.innerHTML = data?.main?.temp ? Math.round(data?.main?.temp - 273) + '&deg;C' : '...'    
+    } catch (error) {
+        console.log(error, 'ERROR!');
+    }
+}
